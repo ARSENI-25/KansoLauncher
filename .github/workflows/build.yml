@@ -22,20 +22,7 @@ jobs:
           mv .github/workflows/MainActivity.kt app/src/main/java/com/example/kansolauncher/MainActivity.kt || mv MainActivity.kt app/src/main/java/com/example/kansolauncher/MainActivity.kt
           python3 -c 'open("settings.gradle.kts", "w").write("pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }\ndependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }\nrootProject.name = \"KansoLauncher\"\ninclude(\":app\")\n")'
           python3 -c 'open("build.gradle.kts", "w").write("plugins { id(\"com.android.application\") version \"8.2.0\" apply false; id(\"org.jetbrains.kotlin.android\") version \"1.9.20\" apply false }\n")'
-          python3 - << 'PY'
-          import xml.etree.ElementTree as ET
-          NS = "http://android.com"
-          ET.register_namespace("android", NS)
-          m = ET.Element("manifest")
-          ET.SubElement(m, "uses-permission", {f"{{{NS}}}name": "android.permission.QUERY_ALL_PACKAGES"})
-          app = ET.SubElement(m, "application", {f"{{{NS}}}label": "Kanso", f"{{{NS}}}theme": "@android:style/Theme.DeviceDefault.NoActionBar"})
-          act = ET.SubElement(app, "activity", {f"{{{NS}}}name": ".MainActivity", f"{{{NS}}}exported": "true", f"{{{NS}}}launchMode": "singleTask", f"{{{NS}}}stateNotNeeded": "true"})
-          flt = ET.SubElement(act, "intent-filter")
-          ET.SubElement(flt, "action", {f"{{{NS}}}name": "android.intent.action.MAIN"})
-          for c in ["HOME", "DEFAULT", "LAUNCHER"]:
-              ET.SubElement(flt, "category", {f"{{{NS}}}name": f"android.intent.category.{c}"})
-          ET.ElementTree(m).write("app/src/main/AndroidManifest.xml", encoding="utf-8", xml_declaration=True)
-          PY
+          mv .github/workflows/AndroidManifest.xml app/src/main/AndroidManifest.xml || mv AndroidManifest.xml app/src/main/AndroidManifest.xml
       - name: Build APK
         run: gradle assembleDebug --refresh-dependencies
       - uses: actions/upload-artifact@v4
