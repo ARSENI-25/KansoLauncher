@@ -13,12 +13,15 @@ jobs:
       - uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.4'
+          cache-disabled: true
       - name: Prepare Android Structure
         run: |
           echo "android.useAndroidX=true" > gradle.properties
-          mv .github/workflows/build.gradle.kts build.gradle.kts || true
-          mv .github/workflows/settings.gradle.kts settings.gradle.kts || true
           mkdir -p app/src/main/java/com/example/kansolauncher
+          mv .github/workflows/build.gradle.kts app/build.gradle.kts || mv build.gradle.kts app/build.gradle.kts
+          mv .github/workflows/settings.gradle.kts settings.gradle.kts || true
+          echo 'include(":app")' >> settings.gradle.kts
+          echo 'plugins { id("com.android.application") version "8.2.0" apply false; id("org.jetbrains.kotlin.android") version "1.9.20" apply false }' > build.gradle.kts
           mv .github/workflows/MainActivity.kt app/src/main/java/com/example/kansolauncher/MainActivity.kt || mv MainActivity.kt app/src/main/java/com/example/kansolauncher/MainActivity.kt
           mv .github/workflows/AndroidManifest.xml app/src/main/AndroidManifest.xml || mv AndroidManifest.xml app/src/main/AndroidManifest.xml
       - name: Build APK
