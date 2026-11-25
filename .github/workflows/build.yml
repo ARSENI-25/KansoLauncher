@@ -15,6 +15,7 @@ jobs:
           gradle-version: '8.4'
       - name: Prepare Android Structure
         run: |
+          echo "android.useAndroidX=true" > gradle.properties
           mv .github/workflows/build.gradle.kts build.gradle.kts || true
           mv .github/workflows/settings.gradle.kts settings.gradle.kts || true
           mkdir -p app/src/main/java/com/example/kansolauncher
