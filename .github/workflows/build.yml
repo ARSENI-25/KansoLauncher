@@ -15,9 +15,11 @@ jobs:
           gradle-version: '8.4'
       - name: Prepare Android Structure
         run: |
+          mv .github/workflows/build.gradle.kts build.gradle.kts || true
+          mv .github/workflows/settings.gradle.kts settings.gradle.kts || true
           mkdir -p app/src/main/java/com/example/kansolauncher
-          mv MainActivity.kt app/src/main/java/com/example/kansolauncher/MainActivity.kt
-          mv AndroidManifest.xml app/src/main/AndroidManifest.xml
+          mv .github/workflows/MainActivity.kt app/src/main/java/com/example/kansolauncher/MainActivity.kt || mv MainActivity.kt app/src/main/java/com/example/kansolauncher/MainActivity.kt
+          mv .github/workflows/AndroidManifest.xml app/src/main/AndroidManifest.xml || mv AndroidManifest.xml app/src/main/AndroidManifest.xml
       - name: Build APK
         run: gradle assembleDebug
       - uses: actions/upload-artifact@v4
