@@ -19,13 +19,12 @@ jobs:
           echo "android.useAndroidX=true" > gradle.properties
           mkdir -p app/src/main/java/com/example/kansolauncher
           mv .github/workflows/build.gradle.kts app/build.gradle.kts || mv build.gradle.kts app/build.gradle.kts
-          mv .github/workflows/settings.gradle.kts settings.gradle.kts || true
-          echo 'include(":app")' >> settings.gradle.kts
-          echo 'plugins { id("com.android.application") version "8.2.0" apply false; id("org.jetbrains.kotlin.android") version "1.9.20" apply false }' > build.gradle.kts
           mv .github/workflows/MainActivity.kt app/src/main/java/com/example/kansolauncher/MainActivity.kt || mv MainActivity.kt app/src/main/java/com/example/kansolauncher/MainActivity.kt
+          python3 -c 'open("settings.gradle.kts", "w").write("pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }\ndependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }\nrootProject.name = \"KansoLauncher\"\ninclude(\":app\")\n")'
+          python3 -c 'open("build.gradle.kts", "w").write("plugins { id(\"com.android.application\") version \"8.2.0\" apply false; id(\"org.jetbrains.kotlin.android\") version \"1.9.20\" apply false }\n")'
           python3 -c 'open("app/src/main/AndroidManifest.xml", "w").write("""<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://android.com"><uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" /><application android:label="Kanso" android:theme="@android:style/Theme.DeviceDefault.NoActionBar"><activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTask" android:stateNotNeeded="true"><intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.HOME" /><category android:name="android.intent.category.DEFAULT" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter></activity></application></manifest>""")'
       - name: Build APK
-        run: gradle assembleDebug
+        run: gradle assembleDebug --refresh-dependencies
       - uses: actions/upload-artifact@v4
         with:
           name: KansoLauncher-APK
